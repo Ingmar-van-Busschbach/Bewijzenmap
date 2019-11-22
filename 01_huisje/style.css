@@ -1,0 +1,13 @@
+body{
+    margin:0;
+    padding: 0;
+    overflow: hidden;
+    height: 1000px;
+    width: 1000px;
+}
+
+canvas{
+  height: 1000px;
+  width: 1000px;
+    background-image: url(grid.png);
+}
