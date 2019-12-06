@@ -39,8 +39,8 @@ function spawnCircle() {
       circle.rdc = Math.floor(Math.random() * 16);
       circle.rda = Math.floor(Math.random() * 35) + 50;
       circle.rdb = Math.floor(Math.random() * 3.14);
-      circle.rdd = Math.floor(Math.random() * 10);
-      circle.rde = Math.floor(Math.random() * 10);
+      circle.rdd = Math.floor(Math.random() * 10)-5;
+      circle.rde = Math.floor(Math.random() * 10)-5;
       circle.color = whiteColors[rdc];
       erasing = false;
       circle.startAngle = 1.5 * mathPi;
