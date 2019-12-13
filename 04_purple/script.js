@@ -5,13 +5,6 @@ const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
 
 // --- Declare Data ---
-// Declase constants.
-let attempts = 0;
-let mathPi = Math.PI;
-let erasing = false;
-let startAngle = 1.5 * mathPi;
-let endAngle = 1.5 * mathPi;
-
 // Declare Screen Size.
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -23,28 +16,30 @@ let x = 100;
 let y = 200;
 let dx = 100;
 let dy = 100;
-let z = 0;
+let z = 2;
 let whiteColors = ["#720b98", "#6f2da8", "#8601af", "#5b0a91", "#6d00c1", "#6a0dad", "#671d9d", "#9621d9", "#550a8a", "#8741bb", "#a167c9", "#ba8cd7", "#d2b2e5", "#59128e", "#481470", "#381354"];
-let a = Math.floor(Math.random() * 16);
+let a = Math.floor(Math.random() * whiteColors.length);
 let b = 50;
 
-circleObject = {};
 let circles = [];
 
 function init() {
+  // Limit the ammount of circles to 100
+    if (circles.length < 500) {
   // Initialize a new circle object with function Circle
   circles.push(new circle());
+}
 }
 
 function circle() {
   //Randomize Circle Data on creation
-  this.x = Math.floor(Math.random() * width / 2) + Math.floor(Math.random() * width / 2);
-  this.y = Math.floor(Math.random() * height / 2) + Math.floor(Math.random() * width / 2);
-  this.dx = Math.floor(Math.random() * 16) - 16;
-  this.dy = Math.floor(Math.random() * 16) - 16;
-  this.a = Math.floor(Math.random() * 16);
   this.b = Math.floor(Math.random() * 40) + 30;
-  this.z = 0;
+  this.x = Math.floor(Math.random() * width - 20 * this.b) + 10 * this.b;
+  this.y = Math.floor(Math.random() * height - 20 * this.b) + 10 * this.b;
+  this.dx = Math.floor(Math.random() * 16) - 32;
+  this.dy = Math.floor(Math.random() * 16) - 32;
+  this.a = Math.floor(Math.random() * 16);
+  this.z = Math.floor(Math.random() * 500);
 
   this.draw = function() {
     // Drawing the instance of Circle
@@ -58,7 +53,7 @@ function circle() {
     this.z++;
     this.dx += (Math.sin(this.z / 100)) + (Math.cos(this.z / 250));
     this.dy += (Math.sin(this.z / 150)) + (Math.cos(this.z / 200));
-    this.b += (1 * Math.sin(this.z / 20));
+    this.b += (0.7 * Math.sin(this.z / 10));
 
     // --- Boundary Logic ---
     // change colors every z % 100 == 0, then if you reach the end of the color array, reset the color index.
@@ -86,9 +81,10 @@ function drawfunction() {
 
 // DoThis allows me to easily create more circles. it will create i < x circles, since for each instance of Init, a circle is created.
 function DoThis() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 1; i++) {
     init();
   }
+    setInterval(init, 1000/(z*z*10));
 }
 
 // Animate animates the circles every (drawfunction, x) frames. Higher frame counts means the animation is played slower.
