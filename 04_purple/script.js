@@ -25,7 +25,7 @@ let circles = [];
 
 function init() {
   // Limit the ammount of circles to 100
-    if (circles.length < 500) {
+    if (circles.length < 25) {
   // Initialize a new circle object with function Circle
   circles.push(new circle());
 }
