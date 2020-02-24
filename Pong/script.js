@@ -193,6 +193,12 @@ function drawfunction() {
   if (moveUp2 == true && player2Y > 0) player2Y -= paddleSpeed;
   if (moveDown2 == true && player2Y < height - paddleLength) player2Y += paddleSpeed;
 
+  if (player2 == false) player2Y = points[i].y - (paddleLength / 2);
+  if (moveUp == true && y > 0) y -= paddleSpeed;
+  if (moveDown == true && y < height - paddleLength) y += paddleSpeed;
+  if (moveUp2 == true && player2Y > 0) player2Y -= paddleSpeed;
+  if (moveDown2 == true && player2Y < height - paddleLength) player2Y += paddleSpeed;
+
   bats[0].drawbat(y);
   circles[i].draw();
   bats[1].drawenemybat(player2Y);

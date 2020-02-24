@@ -13,5 +13,5 @@ function makePositive(input) {
 }
 
 function sinusWave(index) {
-  return ((2* Math.sin(index / 100)) + (2* Math.cos(index / 100))) / 10;
+  return ((2* Math.sin(index / 100)) + (2* Math.cos(index / 100))) / 100;
 }
