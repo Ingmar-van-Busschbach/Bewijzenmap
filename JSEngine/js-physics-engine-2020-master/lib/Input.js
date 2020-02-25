@@ -8,6 +8,11 @@ let moveLeft = false;
 let moveRight = false;
 let moveLeft2 = false;
 let moveRight2 = false;
+let key1 = false;
+let key2 = false;
+let key3 = false;
+let key4 = false;
+let key5 = false;
 
 
 document.addEventListener('mousemove', function(input) {
@@ -72,4 +77,9 @@ document.addEventListener("keyup", event => {
   moveDown2 = false;
   moveLeft2 = false;
   moveRight2 = false;
+  key1 = false;
+  key2 = false;
+  key3 = false;
+  key4 = false;
+  key5 = false;
 });

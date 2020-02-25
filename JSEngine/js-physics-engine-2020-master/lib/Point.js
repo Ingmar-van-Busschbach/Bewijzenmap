@@ -20,10 +20,22 @@ class Point {
   }
 
   move(){
-    if (this.pos.dx < 0 + this.radius) this.velocity.dx = makePositive(this.velocity.dx);
-    if (this.pos.dx > width - this.radius) this.velocity.dx = -makePositive(this.velocity.dx);
-    if (this.pos.dy < 0 + this.radius) this.velocity.dy = makePositive(this.velocity.dx);
-    if (this.pos.dy > height - this.radius) this.velocity.dy = -makePositive(this.velocity.dx);
+    if (this.pos.dx < 0 + this.radius){
+       this.velocity.dx = makePositive(this.velocity.dx);
+       score2++;
+    }
+    if (this.pos.dx > width - this.radius){
+       this.velocity.dx = -makePositive(this.velocity.dx);
+       score1++;
+    }
+    if (this.pos.dy < 0 + this.radius){
+       this.velocity.dy = makePositive(this.velocity.dx);
+       score2++;
+    }
+    if (this.pos.dy > height - this.radius){
+       this.velocity.dy = -makePositive(this.velocity.dx);
+       score1++;
+     }
 
     this.pos.dx += this.velocity.dx;
     this.pos.dy += this.velocity.dy;
@@ -37,10 +49,22 @@ class Point {
     if(this.velocity.dx > 50) this.velocity.dx = 50;
     if(this.velocity.dy > 50) this.velocity.dy = 50;
 
-    if (this.pos.dx < 0 + this.radius) this.velocity.dx = makePositive(this.velocity.dx);
-    if (this.pos.dx > width - this.radius) this.velocity.dx = -makePositive(this.velocity.dx);
-    if (this.pos.dy < 0 + this.radius) this.velocity.dy = makePositive(this.velocity.dx);
-    if (this.pos.dy > height - this.radius) this.velocity.dy = -makePositive(this.velocity.dx);
+    if (this.pos.dx < 0 + this.radius){
+       this.velocity.dx = makePositive(this.velocity.dx);
+       score2++;
+    }
+    if (this.pos.dx > width - this.radius){
+       this.velocity.dx = -makePositive(this.velocity.dx);
+       score1++;
+    }
+    if (this.pos.dy < 0 + this.radius){
+       this.velocity.dy = makePositive(this.velocity.dx);
+       score2++;
+    }
+    if (this.pos.dy > height - this.radius){
+       this.velocity.dy = -makePositive(this.velocity.dx);
+       score1++;
+     }
 
     this.pos.dx += this.velocity.dx;
     this.pos.dy += this.velocity.dy;
