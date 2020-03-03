@@ -14,11 +14,6 @@ let key3 = false;
 let key4 = false;
 let key5 = false;
 
-
-document.addEventListener('mousemove', function(input) {
-  if (mouseControl == true) y = input.pageY;;
-});
-
 document.addEventListener('keydown', function(event) {
   // settings changer
   if (mouseControl == false) {

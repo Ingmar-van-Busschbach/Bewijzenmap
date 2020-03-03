@@ -12,25 +12,39 @@ let randomheight = getRandomInt(0, height);
 let color = "#006666";
 
 let points = [];
-let bats = [];
-let player1 = false;
-let player2 = false;
+let mouseX;
+let mouseY;
+let mousePressed = false;
+let pointPressed = -1;
 
-let score1 = 0;
-let score2 = 0;
+this.addEventListener("mousedown", function(e) {
+  mousePressed=true;
+  for (let i = 0; i < points.length; i++) {
+    if (points[i].testCollision(mouseX, mouseX, mouseY, mouseY)) {
+      pointPressed = i;
+    }
+  }
+});
+this.addEventListener("mouseup", function(e) {
+  mousePressed = false;
+  pointPressed = -1;
+});
+this.addEventListener("mouseout", function(e) {
+  mousePressed = false;
+  pointPressed = -1;
+});
 
-let paddleLength = 25;
-let paddleLength2 = 25;
+this.addEventListener('mousemove', function(e) {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  if(mousePressed && pointPressed != -1) {
+    points[pointPressed].Drag();
+}
+});
 
-let y = height/2;
-let y2 = height/2;
-let x = height/2;
-let x2 = height/2;
-
-function Spawn(color2 = "#ffffff") {
+function Spawn(color = "#ffffff") {
   randomwidth = getRandomInt(250, width-250);
   randomheight = getRandomInt(250, height-250);
-  color = color2;
   if (points.length <= 100) {
   points.push(new Point(new Vector2d(randomwidth, randomheight), 15, color, new Vector2d(getRandomInt(-25, 25)/10,getRandomInt(-25, 25)/10), getRandomInt(0, 500)));
   }
@@ -40,63 +54,52 @@ function Render() {
   context.clearRect(0, 0, width, height);
   for (let i = 0; i < points.length; i++)
   {
-    bats[0].move(moveUp, moveDown, points.length-1);
-    bats[1].move2(moveUp2, moveDown2, points.length-1);
-    bats[2].move3(moveLeft, moveRight, points.length-1);
-    bats[3].move4(moveLeft2, moveRight2, points.length-1);
+    for (let i2 = i+1; i2 < points.length; i2++)
+    {
+    mathlines[i2].ReEvaluate(points[i].pos, points[i2].pos);
 
-    points[i].moveSinus();
-    points[i].testCollision();
+    let i3;
+    if (i == 0 && i2 == 1) i3 = 2;
+    if (i == 0 && i2 == 2) i3 = 1;
+    if (i == 1 && i2 == 2) i3 = 0;
+
+
+    let position3 = new Vector2d((points[i].pos.dx - points[i2].pos.dx)/2+points[i2].pos.dx, (points[i].pos.dy - points[i2].pos.dy)/2+points[i2].pos.dy);
+    weightlines[i2].ReEvaluate(points[i3].pos, position3);
+
+    mathlines[i2].draw(context);
+    weightlines[i2].draw(context);
+    for (i4 = 0; i4 < interceptionPoints.length; i4++){
+    interceptionPoints[0].ReEvaluate(weightlines[i].a, weightlines[i2].a, weightlines[i].b, weightlines[i2].b);
+    interceptionPoints[i4].draw(context);}
+    }
     points[i].draw(context);
-
-    context.beginPath();
-    context.font = "100px Arial";
-    context.fillStyle = "#ffffff";
-    context.fillText(score1 + "-" + score2, width / 2 - 100, height / 2);
-    context.closePath();
   }
 }
-
-bats.push(new PongBat(new Vector2d(10, paddleLength), new Vector2d(paddleLength/10,paddleLength), "#ffffff"));
-bats.push(new PongBat(new Vector2d(width-(10+paddleLength2/10), paddleLength2), new Vector2d(paddleLength2/10,paddleLength2), "#ffffff"));
-bats.push(new PongBat(new Vector2d(paddleLength, 10), new Vector2d(paddleLength,paddleLength/10), "#ffffff"));
-bats.push(new PongBat(new Vector2d(paddleLength2, height-(10+paddleLength2/10)), new Vector2d(paddleLength2,paddleLength2/10), "#ffffff"));
-
-document.addEventListener('keydown', function(event) {
-if (event.keyCode == 32) {
-  console.log(event.keyCode);
-  Spawn();
-}
-if (event.keyCode == 49) {
-  console.log(event.keyCode);
-  key1 = true;
-  if (player1 == false) player1 = true;
-  if (player1 == true) player1 = false;
-}
-if (event.keyCode == 50) {
-  console.log(event.keyCode);
-  key2 = true;
-  if (player2 == false) player2 = true;
-  if (player2 == true) player2 = false;
-}
-if (event.keyCode == 51) {
-  console.log(event.keyCode);
-  key3 = true;
-}
-if (event.keyCode == 52) {
-  console.log(event.keyCode);
-  key4 = true;
-}
-if (event.keyCode == 53) {
-  console.log(event.keyCode);
-  key5 = true;
-}
-});
-
-//setInterval(Spawn, 50);
-Spawn();
-Spawn();
-Spawn();
+function GenerateLines() {
+  for (let i = 0; i < points.length; i++)
+  {
+    for (let i2 = i+1; i2 < points.length; i2++)
+    {
+  GenerateMathLineFromPoints(points[i].pos, points[i2].pos, color = "#ffffff");
+  let i3;
+  if (i == 0 && i2 == 1) i3 = 2;
+  if (i == 0 && i2 == 2) i3 = 1;
+  if (i == 1 && i2 == 2) i3 = 0;
+  GenerateWeightLineFromPoints(points[i].pos, points[i].pos, points[i3].pos, color = "#ff0000");
+}}
+for (let i = 0; i < weightlines.length; i++)
+{
+  for (let i2 = i+1; i2 < weightlines.length; i2++)
+  {
+  GenerateInterceptionPoint(weightlines[i].a, weightlines[i2].a, weightlines[i].b, weightlines[i2].b, 25);
+}}}
+//setInterval(Spawn, 5);
 Spawn("#ff0000");
+Spawn("#00ff00");
+Spawn("#0000ff");
+//Spawn("#ffff00");
+//Spawn("#ff00ff");
+//Spawn("#00ffff");
+GenerateLines();
 setInterval(Render, 10);
-// begin hier met jouw code voor deze opdracht

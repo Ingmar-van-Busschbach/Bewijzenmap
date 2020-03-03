@@ -12,4 +12,11 @@ class Vector2d{
         this.dx = dx;
         this.dy = dy;
     }
+
+    distanceTo(position){
+     let pos1 = this.dx - position.dx;
+     let pos2 = this.dy - position.dy;
+
+     return Math.sqrt(pos1*pos1+pos2*pos2);
+   }
 }
