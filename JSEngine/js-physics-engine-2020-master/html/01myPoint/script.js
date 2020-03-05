@@ -19,6 +19,8 @@ let pointPressed = -1;
 let increment = 1;
 let score1 = 0;
 let score2 = 0;
+let move = true;
+let movesinus = false;
 
 this.addEventListener("mousedown", function(e) {
   mousePressed=true;
@@ -63,7 +65,8 @@ function Render() {
   context.clearRect(0, 0, width, height);
   for (let i = 0; i < points.length; i++)
   {
-    points[i].move();
+    if(move) points[i].move();
+    if(movesinus) points[i].moveSinus();
     let i2 = i+1;
     if(i2==points.length) i2=0;
     let i3 = i2+increment;
