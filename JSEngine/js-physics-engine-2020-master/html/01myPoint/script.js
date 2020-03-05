@@ -16,12 +16,21 @@ let mouseX;
 let mouseY;
 let mousePressed = false;
 let pointPressed = -1;
+let increment = 1;
+let score1 = 0;
+let score2 = 0;
 
 this.addEventListener("mousedown", function(e) {
   mousePressed=true;
   for (let i = 0; i < points.length; i++) {
     if (points[i].testCollision(mouseX, mouseX, mouseY, mouseY)) {
       pointPressed = i;
+    }
+  }
+  for (let i = 0; i < interceptionPoints.length; i++) {
+    if (interceptionPoints[i].testCollision(mouseX, mouseX, mouseY, mouseY)) {
+      console.log(interceptionPoints[i]);
+      console.log(i);
     }
   }
 });
@@ -54,52 +63,55 @@ function Render() {
   context.clearRect(0, 0, width, height);
   for (let i = 0; i < points.length; i++)
   {
-    for (let i2 = i+1; i2 < points.length; i2++)
-    {
-    mathlines[i2].ReEvaluate(points[i].pos, points[i2].pos);
-
-    let i3;
-    if (i == 0 && i2 == 1) i3 = 2;
-    if (i == 0 && i2 == 2) i3 = 1;
-    if (i == 1 && i2 == 2) i3 = 0;
-
-
+    points[i].move();
+    let i2 = i+1;
+    if(i2==points.length) i2=0;
+    let i3 = i2+increment;
+    if(i3>=points.length) i3-=points.length;
+    mathlines[i].ReEvaluate(points[i].pos, points[i2].pos);
     let position3 = new Vector2d((points[i].pos.dx - points[i2].pos.dx)/2+points[i2].pos.dx, (points[i].pos.dy - points[i2].pos.dy)/2+points[i2].pos.dy);
-    weightlines[i2].ReEvaluate(points[i3].pos, position3);
-
-    mathlines[i2].draw(context);
-    weightlines[i2].draw(context);
-    for (i4 = 0; i4 < interceptionPoints.length; i4++){
-    interceptionPoints[0].ReEvaluate(weightlines[i].a, weightlines[i2].a, weightlines[i].b, weightlines[i2].b);
-    interceptionPoints[i4].draw(context);}
-    }
-    points[i].draw(context);
-  }
-}
+        weightlines[i].ReEvaluate(points[i3].pos, position3);
+        for (let i4 = 0; i4 < weightlines.length; i4++)
+        {
+          let i5 = i4+1;
+          if(i5>=weightlines.length) i5=0;
+        interceptionPoints[i4].ReEvaluate(weightlines[i4].a, mathlines[i4].a, weightlines[i4].b, mathlines[i4].b);
+        interceptionPoints[i4].draw(context);
+        interceptionPoints2[i4].ReEvaluate(weightlines[i4].a, weightlines[i5].a, weightlines[i4].b, weightlines[i5].b);
+        interceptionPoints2[i4].draw(context);
+        }
+      points[i].draw(context);
+      mathlines[i].draw(context);
+      weightlines[i].draw(context);
+  }}
 function GenerateLines() {
   for (let i = 0; i < points.length; i++)
   {
-    for (let i2 = i+1; i2 < points.length; i2++)
-    {
-  GenerateMathLineFromPoints(points[i].pos, points[i2].pos, color = "#ffffff");
-  let i3;
-  if (i == 0 && i2 == 1) i3 = 2;
-  if (i == 0 && i2 == 2) i3 = 1;
-  if (i == 1 && i2 == 2) i3 = 0;
-  GenerateWeightLineFromPoints(points[i].pos, points[i].pos, points[i3].pos, color = "#ff0000");
-}}
+    let i2 = i+1;
+    if(i2>=points.length) i2=0;
+    let i3 = i2+1;
+    if(i3>=points.length) i3=0;
+    GenerateMathLineFromPoints(points[i].pos, points[i2].pos, color = "#ffffff");
+    GenerateWeightLineFromPoints(points[i].pos, points[i].pos, points[i3].pos, color = "#ff0000");
+}
 for (let i = 0; i < weightlines.length; i++)
 {
-  for (let i2 = i+1; i2 < weightlines.length; i2++)
-  {
-  GenerateInterceptionPoint(weightlines[i].a, weightlines[i2].a, weightlines[i].b, weightlines[i2].b, 25);
-}}}
+  let i2 = i+1;
+  if(i2>=weightlines.length) i2=0;
+  GenerateInterceptionPoint(weightlines[i].a, mathlines[i].a, weightlines[i].b, mathlines[i].b);
+  GenerateInterceptionPoint2(weightlines[i].a, weightlines[i2].a, weightlines[i].b, weightlines[i2].b);
+}
+}
+
 //setInterval(Spawn, 5);
 Spawn("#ff0000");
 Spawn("#00ff00");
 Spawn("#0000ff");
-//Spawn("#ffff00");
+Spawn("#ffff00");
 //Spawn("#ff00ff");
 //Spawn("#00ffff");
 GenerateLines();
+//GenerateInterceptionPoint(weightlines[0].a, mathlines[0].a, weightlines[0].b, mathlines[0].b);
+//GenerateInterceptionPoint(weightlines[1].a, mathlines[1].a, weightlines[1].b, mathlines[1].b);
+//GenerateInterceptionPoint(weightlines[2].a, mathlines[2].a, weightlines[2].b, mathlines[2].b);
 setInterval(Render, 10);

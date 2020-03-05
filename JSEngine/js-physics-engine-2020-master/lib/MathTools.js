@@ -28,10 +28,12 @@ function GetSlope(pos1, pos2){
   return result;
 }
 function CalcIntercept(a1, a2, b1, b2){
+  let x = 0;
+  let y = 0;
   let bool = InterceptReturnBoolean(a1, a2, b1, b2);
   if(bool){
-    let x = InterceptReturnX(a1, a2, b1, b2);
-    let y = InterceptReturnY(x, a1, b1);
+    x = InterceptReturnX(a1, a2, b1, b2);
+    y = InterceptReturnY(x, a1, b1);
   }
   return[bool, x, y];
 }

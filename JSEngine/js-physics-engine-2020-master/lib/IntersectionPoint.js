@@ -1,4 +1,5 @@
 let interceptionPoints = [];
+let interceptionPoints2 = [];
 
 class IntersectionPoint {
   constructor(pos, radius, color) {
@@ -9,9 +10,9 @@ class IntersectionPoint {
 
   draw(context) {
     context.beginPath();
-    context.fillStyle = this.color;
+    context.strokeStyle = this.color;
     context.arc(this.pos.dx, this.pos.dy, this.radius, 0, Math.PI * 2, true);
-    context.fill();
+    context.stroke();
     context.closePath();
   }
 
@@ -19,12 +20,19 @@ class IntersectionPoint {
     let result = CalcIntercept(a1, a2, b1, b2);
     if(result[0]){
     this.pos = new Vector2d(result[1], result[2]);
-    console.log(result);
   }}
+  testCollision(x1, x2, y1, y2) {
+    if (this.pos.dx + this.radius > x1 && this.pos.dx - this.radius < x2 && this.pos.dy + this.radius > y1 && this.pos.dy - this.radius < y2) return true;
+  }
 }
 
 function GenerateInterceptionPoint(a1, a2, b1, b2, radius = 10, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
   if(result[0] == true){ interceptionPoints.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
+  }
+}
+function GenerateInterceptionPoint2(a1, a2, b1, b2, radius = 10, color = "#ffffff"){
+  let result = CalcIntercept(a1, a2, b1, b2);
+  if(result[0] == true){ interceptionPoints2.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
   }
 }
