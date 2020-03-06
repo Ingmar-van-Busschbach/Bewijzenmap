@@ -57,7 +57,18 @@ function Spawn(color = "#ffffff") {
   randomwidth = getRandomInt(250, width-250);
   randomheight = getRandomInt(250, height-250);
   if (points.length <= 100) {
-  points.push(new Point(new Vector2d(randomwidth, randomheight), 15, color, new Vector2d(getRandomInt(-25, 25)/10,getRandomInt(-25, 25)/10), getRandomInt(0, 500)));
+  points.push(new Point(new Vector2d(randomwidth, randomheight), 10, color, new Vector2d(getRandomInt(-25, 25)/10,getRandomInt(-25, 25)/10), getRandomInt(0, 500)));
+  }
+}
+function Spawn(color = "#ffffff") {
+  randomwidth = getRandomInt(250, width-250);
+  randomheight = getRandomInt(250, height-250);
+  if (points.length <= 100) {
+  points.push(new Point(new Vector2d(randomwidth, randomheight), 10, color, new Vector2d(getRandomInt(-25, 25)/10,getRandomInt(-25, 25)/10), getRandomInt(0, 500)));
+  GenerateMathLineFromPoints(points[0].pos, points[1].pos);
+  GenerateWeightLineFromPoints(points[0].pos, points[0].pos, points[2].pos);
+  GenerateInterceptionPoint(weightlines[0].a, mathlines[0].a, weightlines[0].b, mathlines[0].b);
+  GenerateInterceptionPoint2(weightlines[0].a, weightlines[1].a, weightlines[0].b, weightlines[1].b);
   }
 }
 
@@ -111,8 +122,14 @@ Spawn("#ff0000");
 Spawn("#00ff00");
 Spawn("#0000ff");
 Spawn("#ffff00");
-//Spawn("#ff00ff");
-//Spawn("#00ffff");
+Spawn("#ff00ff");
+Spawn("#00ffff");
+Spawn("#ff0000");
+Spawn("#00ff00");
+Spawn("#0000ff");
+Spawn("#ffff00");
+Spawn("#ff00ff");
+Spawn("#00ffff");
 GenerateLines();
 //GenerateInterceptionPoint(weightlines[0].a, mathlines[0].a, weightlines[0].b, mathlines[0].b);
 //GenerateInterceptionPoint(weightlines[1].a, mathlines[1].a, weightlines[1].b, mathlines[1].b);

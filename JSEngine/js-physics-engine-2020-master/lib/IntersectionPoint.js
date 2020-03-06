@@ -26,12 +26,12 @@ class IntersectionPoint {
   }
 }
 
-function GenerateInterceptionPoint(a1, a2, b1, b2, radius = 10, color = "#ffffff"){
+function GenerateInterceptionPoint(a1, a2, b1, b2, radius = 5, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
   if(result[0] == true){ interceptionPoints.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
   }
 }
-function GenerateInterceptionPoint2(a1, a2, b1, b2, radius = 10, color = "#ffffff"){
+function GenerateInterceptionPoint2(a1, a2, b1, b2, radius = 5, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
   if(result[0] == true){ interceptionPoints2.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
   }
