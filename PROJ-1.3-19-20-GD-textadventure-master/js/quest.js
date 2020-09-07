@@ -122,7 +122,7 @@ function getInput(e) {
                     currentZ += 1;
                     if (rooms[getPlayerRoom()].requiredItem != "") {
                         if (!(inventory.includes(rooms[getPlayerRoom()].requiredItem))) {
-                            console.log("je hebt niet de juiste items")
+                            console.log("You are missing some items")
                             currentZ -= 1;
                             invalidItems();
                         } else {

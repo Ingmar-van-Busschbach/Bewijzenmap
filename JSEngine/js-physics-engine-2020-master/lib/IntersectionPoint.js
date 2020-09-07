@@ -1,5 +1,6 @@
 let interceptionPoints = [];
 let interceptionPoints2 = [];
+let interceptionPoints3 = [];
 
 class IntersectionPoint {
   constructor(pos, radius, color) {
@@ -26,13 +27,8 @@ class IntersectionPoint {
   }
 }
 
-function GenerateInterceptionPoint(a1, a2, b1, b2, radius = 5, color = "#ffffff"){
+function GenerateInterceptionPoint(a1, a2, b1, b2, array = interceptionPoints, radius = 5, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
-  if(result[0] == true){ interceptionPoints.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
-  }
-}
-function GenerateInterceptionPoint2(a1, a2, b1, b2, radius = 5, color = "#ffffff"){
-  let result = CalcIntercept(a1, a2, b1, b2);
-  if(result[0] == true){ interceptionPoints2.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
+  if(result[0] == true){ array.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
   }
 }

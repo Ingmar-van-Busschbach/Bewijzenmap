@@ -7,7 +7,7 @@
 	* radius (grootte van de cirkel in pixels)
 	* color (kleur van het punt, als String)
 */
-let speed = 5;
+let speed = 3;
 
 class PongBat {
 
@@ -18,9 +18,9 @@ class PongBat {
     this.color = color;
   }
 
-    move(up, down, i){
-      if (up==true && y > 0) y -= speed;
-      if (down==true && y < height-150) y += speed;
+    move(input, i){
+      if (input > 0 && y > 0) y -= speed;
+      if (input < 0 && y < height-150) y += speed;
       if (player1 == false) y = points[i].pos.dy - (this.size.dy / 2);
       this.pos.dy = y;
       context.beginPath();
@@ -29,9 +29,9 @@ class PongBat {
       context.closePath();
       context.fill();
     }
-    move2(up, down, i){
-      if (up==true && y2 > 0) y2 -= speed;
-      if (down==true && y2 < height-150) y2 += speed;
+    move2(input, i){
+      if (input > 0 && y2 > 0) y2 -= speed;
+      if (input < 0 && y2 < height-150) y2 += speed;
       if (player2 == false) y2 = points[i].pos.dy - (this.size.dy / 2);
       this.pos.dy = y2;
       context.beginPath();
@@ -40,9 +40,9 @@ class PongBat {
       context.closePath();
       context.fill();
     }
-    move3(up, down, i){
-      if (up==true && x > 0) x -= speed;
-      if (down==true && x < width-150) x += speed;
+    move3(input, i){
+      if (input > 0 && x > 0) x -= speed;
+      if (input < 0 && x < width-150) x += speed;
       if (player1 == false) x = points[i].pos.dx - (this.size.dx / 2);
       this.pos.dx = x;
       context.beginPath();
@@ -51,9 +51,9 @@ class PongBat {
       context.closePath();
       context.fill();
     }
-    move4(up, down, i){
-      if (up==true && x2 > 0) x2 -= speed;
-      if (down==true && x2 < width-150) x2 += speed;
+    move4(input, i){
+      if (input > 0 && x2 > 0) x2 -= speed;
+      if (input < 0 && x2 < width-150) x2 += speed;
       if (player2 == false) x2 = points[i].pos.dx - (this.size.dx / 2);
       this.pos.dx = x2;
       context.beginPath();

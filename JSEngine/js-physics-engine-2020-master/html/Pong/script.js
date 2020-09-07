@@ -13,7 +13,7 @@ let color = "#006666";
 
 let bats = [];
 let player1 = true;
-let player2 = true;
+let player2 = false;
 
 let score1 = 0;
 let score2 = 0;
@@ -25,7 +25,6 @@ let y = height/2;
 let y2 = height/2;
 let x = height/2;
 let x2 = height/2;
-
 let points = [];
 
 function Spawn(color2 = "#ffffff") {
@@ -41,7 +40,7 @@ function Render() {
   context.clearRect(0, 0, width, height);
   for (let i = 0; i < points.length; i++)
   {
-    for (let i2 = i+1; i2 < points.length; i2++)
+    /*for (let i2 = i+1; i2 < points.length; i2++)
     {
     let res1 = -GetSlope(points[i].pos, points[i2].pos);
     let res2 = -Evaluate(0, res1 * points[i].pos.dx - points[i].pos.dy);
@@ -51,12 +50,12 @@ function Render() {
     context.lineTo(width, width*res1 + res2);
     context.strokeStyle = "#009999";
     context.stroke();
-    }
+    }*/
 
-    bats[0].move(moveUp, moveDown, points.length-1);
-    bats[1].move2(moveUp2, moveDown2, points.length-1);
-    bats[2].move3(moveLeft, moveRight, points.length-1);
-    bats[3].move4(moveLeft2, moveRight2, points.length-1);
+    bats[0].move(moveVector.dy, points.length-1);
+    bats[1].move2(moveVector2.dy, points.length-1);
+    bats[2].move3(moveVector.dx, points.length-1);
+    bats[3].move4(moveVector2.dx, points.length-1);
 
     points[i].moveSinus();
     if(points[i].testCollision(bats[0].pos.dx, bats[0].pos.dx + bats[0].size.dx, bats[0].pos.dy, bats[0].pos.dy + bats[0].size.dy)) points[i].ChangeDirectionX(true);
@@ -64,7 +63,7 @@ function Render() {
     if(points[i].testCollision(bats[2].pos.dx, bats[2].pos.dx + bats[2].size.dx, bats[2].pos.dy, bats[2].pos.dy + bats[2].size.dy)) points[i].ChangeDirectionY(true);
     if(points[i].testCollision(bats[3].pos.dx, bats[3].pos.dx + bats[3].size.dx, bats[3].pos.dy, bats[3].pos.dy + bats[3].size.dy)) points[i].ChangeDirectionY(false);
     points[i].draw(context);
-
+    points[i].drawVelocity(context);
     //context.beginPath();
     //context.moveTo(points[0].pos.dx, points[0].pos.dy);
     //for (let i = 0; i < points.length; i++) {

@@ -1,15 +1,19 @@
 body{
-  background-color: white;
+  background-color: black;
 }
 
 .container{
   display: inline-block;
   width: 600px;
-  background-color: aliceblue;
+  background-color: black;
   padding: 20px;
-  border: blue 3px solid;
+  border: red 3px solid;
   border-radius: 10px;
 
+}
+
+h1, h2, label{
+  color: white;
 }
 
 #feedback{
@@ -25,9 +29,9 @@ body{
   float:right;
   display: inline-block;
   width: 600px;
-  background-color: aliceblue;
+  background-color: black;
   padding: 20px;
-  border: blue 3px solid;
+  border: red 3px solid;
 }
 
 

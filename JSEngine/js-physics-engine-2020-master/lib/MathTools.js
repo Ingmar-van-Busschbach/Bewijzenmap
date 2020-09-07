@@ -8,6 +8,15 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 function makePositive(input) {
     return Math.abs(input);
 }
@@ -22,7 +31,10 @@ function Evaluate(x = this.x, formula = this.formula){
   let result = eval(formula2.split(search).join(x.toString()));
   return result;
 }
-
+function GetDistance(pos1, pos2){
+  let result = Math.sqrt((pos2.dy - pos1.dy)*(pos2.dy - pos1.dy) + (pos2.dx - pos1.dx)*(pos2.dx - pos1.dx));
+  return result;
+}
 function GetSlope(pos1, pos2){
   let result = (pos2.dy - pos1.dy)/(pos2.dx - pos1.dx);
   return result;

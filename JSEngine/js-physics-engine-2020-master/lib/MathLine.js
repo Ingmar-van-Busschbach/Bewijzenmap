@@ -8,6 +8,11 @@
 */
 let mathlines = [];
 let weightlines = [];
+let perpendiculars = [];
+let perpendiculars2 = [];
+let parallels = [];
+let parallels2 = [];
+
 class Mathline {
   constructor(a, b, x1, x2, color = "#ffffff") {
   this.a = a;
@@ -26,9 +31,34 @@ class Mathline {
   }
 
   ReEvaluate(pos1, pos2) {
-    x = pos1.dx;
-    y = pos1.dy;
+    let x = pos1.dx;
+    let y = pos1.dy;
     res1 = GetSlope(pos1, pos2);
+    res2 = -Evaluate(0, res1 * x - y);
+    this.a = res1;
+    this.b = res2;
+  }
+  ReEvaluatePerpendicular(pos1, angle) {
+    let x = pos1.dx;
+    let y = pos1.dy;
+    res1 = -1/angle;
+    res2 = -Evaluate(0, res1 * x - y);
+    this.a = res1;
+    this.b = res2;
+  }
+  ReEvaluateParalell(pos1, angle) {
+    let x = pos1.dx;
+    let y = pos1.dy;
+    res1 = angle;
+    res2 = -Evaluate(0, res1 * x - y);
+    this.a = res1;
+    this.b = res2;
+  }
+  ReEvaluate2Angles(pos1, angle, angle2) {
+    let x = pos1.dx;
+    let y = pos1.dy;
+    let res1 = angle-(angle2-angle)/2;
+
     res2 = -Evaluate(0, res1 * x - y);
     this.a = res1;
     this.b = res2;
@@ -36,22 +66,30 @@ class Mathline {
 }
 
 function GenerateMathLineFromPoints(pos1, pos2, color = "#ffffff") {
-  x = pos1.dx;
-  y = pos1.dy;
+  let x = pos1.dx;
+  let y = pos1.dy;
   res1 = GetSlope(pos1, pos2);
   res2 = -Evaluate(0, res1 * x - y);
   mathlines.push(new Mathline(res1, res2, 0, width, color));
 }
 
 function GenerateWeightLineFromPoints(pos1, pos2, pos3, color = "#ffffff") {
-  x1 = pos1.dx;
-  y1 = pos1.dy;
-  x2 = pos2.dx;
-  y2 = pos2.dy;
-  x3 = pos3.dx;
-  y3 = pos3.dy;
+  let x1 = pos1.dx;
+  let y1 = pos1.dy;
+  let x2 = pos2.dx;
+  let y2 = pos2.dy;
+  let x3 = pos3.dx;
+  let y3 = pos3.dy;
   let position = new Vector2d((x1 - x2)/2+x2, (y1 - y2)/2+y2);
   res1 = GetSlope(pos3, position);
   res2 = -Evaluate(0, res1 * x3 - y3);
   weightlines.push(new Mathline(res1, res2, 0, width, color));
+}
+
+function GeneratePerpendicularLineFromPointAndLine(pos1, angle, array = perpendiculars, color = "#00ffff") {
+  let x = pos1.dx;
+  let y = pos1.dy;
+  res1 = -1/angle;
+  res2 = -Evaluate(0, res1 * x - y);
+  array.push(new Mathline(res1, res2, 0, width, color));
 }
