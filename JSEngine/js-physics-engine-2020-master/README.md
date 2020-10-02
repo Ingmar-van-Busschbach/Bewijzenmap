@@ -10,3 +10,6 @@ http://30147.hosts2.ma-cloud.nl/bewijzenmap/periode1.3/sct/js-physics-engine-202
 
 Map:
 http://30147.hosts2.ma-cloud.nl/bewijzenmap/periode1.3/sct/js-physics-engine-2020-master/html/14myMap/
+
+Dice:
+http://30147.hosts2.ma-cloud.nl/bewijzenmap/periode1.3/sct/js-physics-engine-2020-master/html/Dice/
