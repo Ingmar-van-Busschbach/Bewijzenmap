@@ -54,7 +54,7 @@ function UpdateScores() {
 document.getElementById("loop").addEventListener("click", function () {
     let loopCount = document.getElementById("loopCount").value;
    if (!Number.isInteger(Number.parseInt(loopCount))) {
-       console.log("Geen number:   " + loopCount)
+       console.log("NaN:   " + loopCount)
        return;
    }
    let loopAmount = Number.parseInt(document.getElementById("loopCount").value)
