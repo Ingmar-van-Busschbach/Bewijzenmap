@@ -34,7 +34,7 @@ function errorHandler(statusCode){
 
 function serverWriteJson(data){
   let drawingJsonString = JSON.stringify(data);
-  let url = controlScript + "?put=" + drawingJsonString;
+  let url = "http://30147.hosts2.ma-cloud.nl/bewijzenmap/leerjaar2/PaintItBlack/" + controlScript + "?put=" + drawingJsonString;
   makeAjaxCall(url, "GET");
 }
 

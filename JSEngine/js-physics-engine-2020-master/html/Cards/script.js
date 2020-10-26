@@ -7,7 +7,6 @@ const height = window.innerHeight/1.5;
 canvas.width = width;
 canvas.height = height;
 
-// begin hier met jouw code voor deze opdracht
 let img,numberOnARow,numberOnAColumn,sx,sy,sw,sh,x,y,w,h,index;
 img = new Image();
 img.src = "cardDeck.png";
