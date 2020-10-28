@@ -44,11 +44,7 @@ class AnimatableObject{
     context.drawImage(this.img,this.sx,this.sy,this.sw,this.sh,this.posx,this.posy,this.sw,this.sh);
     console.log(this.index);
   }
-  gridAnimate(grid){
-    for(i=0; i<grid.length; i++){
-      console.log();
-    }
-
+  gridAnimate(x,y){
     this.index++;
     if(this.index>=this.endIndex){this.index=this.startIndex;}
     this.sx = (this.index%this.spriteWidth)*this.sw;
@@ -60,7 +56,6 @@ class AnimatableObject{
 let tank;
 let tank2;
 let tile;
-let grid[] = new grid[];
 
 img.addEventListener('load',()=>{
   tile = new AnimatableObject(img,8,4, 0, 0, 0, 0, 0, 0)
