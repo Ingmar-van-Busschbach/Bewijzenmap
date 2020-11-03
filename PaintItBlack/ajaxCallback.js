@@ -17,13 +17,13 @@ function makeAjaxCall(url, methodType){
                 resolve(serverResponse); // wordt via return promiseObj teruggegeven
              } else {
                reject(xmlhttp.status);
-               console.log("xmlhttp failed"); // debug
+               //console.log("xmlhttp failed"); // debug
              }
           } else {
              //console.log("xmlhttp processing going on"); // debug
           }
        }
-       console.log("request sent succesfully"); // debug
+       //console.log("request sent succesfully"); // debug
      });
   return promiseObj;
 }
