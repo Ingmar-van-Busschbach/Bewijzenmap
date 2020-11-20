@@ -31,7 +31,7 @@ class Circle{
 	}
 }
 
-class Complex{
+class Convex{
 	constructor(position, points, buildEdges, edges = []){
 		this.id = 2;
 		this.points = points;
@@ -55,8 +55,8 @@ class Complex{
 	}
 
 	BuildEdges() {
-		let p1 = new Vector(0,0);
-		let p2 = new Vector(0,0);
+		let p1 = new Vector2d(0,0);
+		let p2 = new Vector2d(0,0);
 		this.edges = [];
 		for(let i=0;i<this.points.length;i++){
 			p1 = this.points[i];
@@ -65,23 +65,23 @@ class Complex{
 			} else {
 				p2 = this.points[i+1];
 			}
-			this.edges.push(VectorMinVector(p2,p1));
+			this.edges.push(Vector2dMinVector2d(p2,p1));
 		}
 	}
 
 	CalculateAveragePosition() {
-		let result = new Vector(0,0);
+		let result = new Vector2d(0,0);
 		for(let i=0;i<points.length;i++){
 			result.x+=this.points[i].x;
 			result.y+=this.points[i].y;
 		}
-		return new Vector(result.x/this.points.length,result.y/this.points.length);
+		return new Vector2d(result.x/this.points.length,result.y/this.points.length);
 	}
 
 	Move(moveDirection) {
 		for(let i=0;i<this.points.length;i++){
 			let p = this.points[i];
-			this.points[i] = new Vector(p.x+moveDirection.x,p.y+moveDirection.y);
+			this.points[i] = new Vector2d(p.x+moveDirection.x,p.y+moveDirection.y);
 		}
 	}
 
@@ -93,7 +93,7 @@ class Complex{
 			let p = this.points[i];
       let nx = (cos * (p.x - axis.x)) + (sin * (p.y - axis.y)) + axis.x;
       let ny = (cos * (p.y - axis.y)) - (sin * (p.x - axis.x)) + axis.y;
-      this.points[i] = new Vector(nx,ny);
+      this.points[i] = new Vector2d(nx,ny);
     }
   }
 }

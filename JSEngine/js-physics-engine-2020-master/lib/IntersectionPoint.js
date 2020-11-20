@@ -29,6 +29,6 @@ class IntersectionPoint {
 
 function GenerateInterceptionPoint(a1, a2, b1, b2, array = interceptionPoints, radius = 5, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
-  if(result[0] == true){ array.push(new IntersectionPoint(new Vector2d(result[1], result[2]), radius, color));
+  if(result.intersects == true){ array.push(new IntersectionPoint(new Vector2d(intersectionResult.atPoint.x, intersectionResult.atPoint.y), radius, color));
   }
 }

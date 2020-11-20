@@ -1,4 +1,4 @@
-class Vector
+class Vector2d
 {
 	constructor(x,y){
 		this.x = x;
@@ -27,42 +27,83 @@ class Vector
 
 	GetNormalized() {
 		let length = Length();
-		return new Vector(this.x / length,this.y / length);
+		return new Vector2d(this.x / length,this.y / length);
 	}
 
-	DotProduct(vector) {
-		return this.x * vector.x + this.y * vector.y;
+	DotProduct(va) {
+		return this.x * va.x + this.y * va.y;
 	}
 
-	DistanceTo(vector) {
-		return Math.sqrt(Math.pow(vector.x-this.x, 2) + Math.pow(vector.y-this.y, 2));
+	DistanceTo(va) {
+		return Math.sqrt(Math.pow(va.x-this.x, 2) + Math.pow(va.y-this.y, 2));
 	}
 
-	EqualsVector(v) {
+	EqualsVector2d(v) {
 		return this.x==v.x&&this.y==v.y;
 	}
+
+	Draw(context,pos,scale,color = "white"){
+		let shaftHeight = 10;
+		let arrowHeight = 20;
+		let arrowWidth = 40;
+		let shaftWidth = this.magnitude*scale - arrowWidth;
+
+		context.fillStyle = color;
+
+		context.save();
+		context.translate(pos.x,pos.y);
+		context.rotate(this.angle)
+
+		context.beginPath();
+		context.moveTo(0,0);
+		context.lineTo(0,shaftHeight/2);
+		context.lineTo(shaftWidth,shaftHeight/2);
+		context.lineTo(shaftWidth,arrowHeight/2);
+		context.lineTo(shaftWidth + arrowWidth,0);
+		context.lineTo(shaftWidth,-arrowHeight/2);
+		context.lineTo(shaftWidth,-shaftHeight/2);
+		context.lineTo(0,-shaftHeight/2);
+		context.closePath();
+		context.stroke();
+		context.fill();
+
+		context.restore();
+	}
 }
 
-function VectorPlusVector(va, vb){
-	return new Vector(va.x+vb.x, va.y+vb.y);
+function Vector2dPlusVector2d(va, vb){
+	return new Vector2d(va.x+vb.x, va.y+vb.y);
 }
 
-function VectorMinVector(va, vb){
-	return new Vector(va.x-vb.x, va.y-vb.y);
+function Vector2dMinVector2d(va, vb){
+	return new Vector2d(va.x-vb.x, va.y-vb.y);
 }
 
-function VectorMultVector(va, vb){
-	return new Vector(va.x*vb.x, va.y*vb.y);
+function Vector2dMultVector2d(va, vb){
+	return new Vector2d(va.x*vb.x, va.y*vb.y);
 }
 
-function VectorMultFloat(va, fb){
-	return new Vector(va.x*fb, va.y*fb);
+function Vector2dMultFloat(va, fb){
+	return new Vector2d(va.x*fb, va.y*fb);
 }
 
-function InvertVector(va){
-	return new Vector(-va.x, -va.y);
+function InvertVector2d(va){
+	return new Vector2d(-va.x, -va.y);
 }
 
-function VectorEqualsVector(va,vb) {
-	return va.x==vb.x&&va.y==vb.y;
+function perpendicularVector2d(va){
+	return new Vector2d(-va.y, va.x);
+}
+
+function Vector2dEqualsVector2d(va,vb,margin=0) {
+	if(margin>0){
+		return Math.abs(va.x-vb.x)>margin && Math.abs(va.y-vb.y)>margin;
+	}
+	else {
+		return va.x==vb.x&&va.y==vb.y;
+	}
+}
+
+function DistanceVector2d(va,vb){
+	return Math.sqrt(Math.pow(va.x-vb.x, 2) + Math.pow(va.y-vb.y, 2));
 }

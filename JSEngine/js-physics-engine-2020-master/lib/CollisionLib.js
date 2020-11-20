@@ -1,13 +1,13 @@
 //Automatically determines collision type dependon on collision ID of both objects
 class CollisionReturn{
-  constructor(collides, overlapVector = new Vector(0,0), willCollide = false) {
+  constructor(collides, overlapVector2d = new Vector2d(0,0), willCollide = false) {
     this.collides = collides;
-    this.overlapVector = overlapVector;
+    this.overlapVector2d = overlapVector2d;
     this.willCollide = willCollide;
   }
 }
 
-function CheckCollision(object1,object2,velocity = new Vector(0,0)){
+function CheckCollision(object1,object2,velocity = new Vector2d(0,0),useMathLine=false){
   let collisionReturn = new CollisionReturn(false);
   switch(object1.id){
   case -1:
@@ -17,19 +17,19 @@ function CheckCollision(object1,object2,velocity = new Vector(0,0)){
     if(object2.id==-1){console.log("one or more objects has collision disabled");return collisionReturn;}
 	  if(object2.id==0){return BoxCollision(object1,object2,velocity);}
 	  if(object2.id==1){return BoxCircleCollision(object1,object2,velocity);}
-	  if(object2.id==2){return BoxComplexCollision(object1,object2,velocity);}
+	  if(object2.id==2){return BoxSATCollision(object1,object2,velocity);}
 	break;
   case 1:
     if(object2.id==-1){console.log("one or more objects has collision disabled");return collisionReturn;}
 	  if(object2.id==0){return BoxCollision(object2,object1,velocity);}
 	  if(object2.id==1){return CircleCollision(object1,object2,velocity);}
-	  if(object2.id==2){return CircleComplexCollision(object1,object2,velocity);}
+	  if(object2.id==2){return CircleSATCollision(object1,object2,velocity,useMathLine);}
 	break;
   case 2:
     if(object2.id==-1){console.log("one or more objects has collision disabled");return collisionReturn;}
-	  if(object2.id==0){return BoxComplexCollision(object2,object1,velocity);}
-	  if(object2.id==1){return CircleComplexCollision(object2,object1,velocity);}
-	  if(object2.id==2){return ComplexCollision(object1,object2,velocity);}
+	  if(object2.id==0){return BoxSATCollision(object2,object1,velocity);}
+	  if(object2.id==1){return CircleSATCollision(object2,object1,velocity,useMathLine);}
+	  if(object2.id==2){return SATCollision(object1,object2,velocity,useMathLine);}
 	break;
   default:
   console.log("one or more objects is missing collision setup. Please add collsion ID's to your object!");
@@ -38,7 +38,7 @@ function CheckCollision(object1,object2,velocity = new Vector(0,0)){
 }
 
 //simple rectangle/box collision
-function BoxCollision(rect1,rect2,velocity = new Vector(0,0)){
+function BoxCollision(rect1,rect2,velocity = new Vector2d(0,0)){
   let collisionReturn = new CollisionReturn(false);
   if(velocity.Length()>0){
     let x = rect1.x+velocity.x;
@@ -51,7 +51,7 @@ function BoxCollision(rect1,rect2,velocity = new Vector(0,0)){
     {
       let overlapX = Math.min((rect2.x+rect2.w-x),(x + rect1.w-rect2.x));
       let overlapY = Math.min((rect2.y + rect2.h-y),(y + rect1.h-rect2.y));
-      collisionReturn.overlapVector = new Vector(overlapX,overlapY);
+      collisionReturn.overlapVector2d = new Vector2d(overlapX,overlapY);
       collisionReturn.collides = true;
       collisionReturn.willCollide = true;
       return collisionReturn;
@@ -64,7 +64,7 @@ function BoxCollision(rect1,rect2,velocity = new Vector(0,0)){
     {
       let overlapX = Math.min((rect2.x+rect2.w-rect1.x),(rect1.x + rect1.w-rect2.x));
       let overlapY = Math.min((rect2.y + rect2.h-rect1.y),(rect1.y + rect1.h-rect2.y));
-      collisionReturn.overlapVector = new Vector(overlapX,overlapY);
+      collisionReturn.overlapVector2d = new Vector2d(overlapX,overlapY);
       collisionReturn.collides = true;
       return collisionReturn;
     }
@@ -73,7 +73,7 @@ function BoxCollision(rect1,rect2,velocity = new Vector(0,0)){
 }
 
 //simple circle/sphere collision
-function CircleCollision(circle1, circle2,velocity = new Vector(0,0)){
+function CircleCollision(circle1, circle2,velocity = new Vector2d(0,0)){
   let collisionReturn = new CollisionReturn(false);
   if(velocity.Length()>0){
     let x = circle1.x+velocity.x;
@@ -83,7 +83,7 @@ function CircleCollision(circle1, circle2,velocity = new Vector(0,0)){
     let dr = Math.sqrt(dx * dx + dy * dy);
     if(dr < circle1.r + circle2.r) {
       let overlapRatio = (circle1.r+circle2.r)/dr;
-      collisionReturn.overlapVector = new Vector((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
+      collisionReturn.overlapVector2d = new Vector2d((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
       collisionReturn.collides = true;
       return collisionReturn;
     }
@@ -93,7 +93,7 @@ function CircleCollision(circle1, circle2,velocity = new Vector(0,0)){
     let dr = Math.sqrt(dx * dx + dy * dy);
     if(dr < circle1.r + circle2.r) {
       let overlapRatio = (circle1.r+circle2.r)/dr;
-      collisionReturn.overlapVector = new Vector((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
+      collisionReturn.overlapVector2d = new Vector2d((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
       collisionReturn.collides = true;
       return collisionReturn;
     }
@@ -101,7 +101,7 @@ function CircleCollision(circle1, circle2,velocity = new Vector(0,0)){
   return collisionReturn;
 }
 
-function BoxCircleCollision(rect,circle,velocity = new Vector(0,0)){
+function BoxCircleCollision(rect,circle,velocity = new Vector2d(0,0)){
   let collisionReturn = new CollisionReturn(false);
   let distX = Math.abs(circle.x - rect.x-rect.w/2);
   let distY = Math.abs(circle.y - rect.y-rect.h/2);
@@ -110,12 +110,12 @@ function BoxCircleCollision(rect,circle,velocity = new Vector(0,0)){
   if (distY > (rect.h/2 + circle.r)) { return collisionReturn; }
 
   if (distX <= (rect.w/2)) {
-    collisionReturn.overlapVector = new Vector(rect.w/2,0);
+    collisionReturn.overlapVector2d = new Vector2d(rect.w/2,0);
     collisionReturn.collides = true;
     return collisionReturn;
   }
   if (distY <= (rect.h/2)) {
-    collisionReturn.overlapVector = new Vector(0,rect.h/2);
+    collisionReturn.overlapVector2d = new Vector2d(0,rect.h/2);
     collisionReturn.collides = true;
     return collisionReturn;
   }
@@ -126,40 +126,39 @@ function BoxCircleCollision(rect,circle,velocity = new Vector(0,0)){
   if(dr<=(circle.r*circle.r))
   {
     let overlapRatio = (circle1.r+circle2.r)/dr;
-    collisionReturn.overlapVector = new Vector((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
+    collisionReturn.overlapVector2d = new Vector2d((dx*overlapRatio)-dx,(dy*overlapRatio)-dy);
     collisionReturn.collides = true;
     return collisionReturn;
   }
   return collisionReturn;
 }
 
-function ComplexCollision(complex1,complex2,velocity=new Vector(0,0)){
-  let collisionReturn = new CollisionReturn(true, new Vector(0,0), true);
-  collisionReturn.collides = true;
-	let edgeCountA = complex1.edges.length;
-	let edgeCountB = complex2.edges.length;
+function SATCollision(convex1,convex2,velocity=new Vector2d(0,0),useMathLine){
+  let collisionReturn = new CollisionReturn(true, new Vector2d(0,0), true);
+	let edgeCountA = convex1.edges.length;
+	let edgeCountB = convex2.edges.length;
   let minIntervalDistance = 1000000;
-	let translationAxis = new Vector(0,0);
-	let edge = new Vector(0,0);
+	let translationAxis = new Vector2d(0,0);
+	let edge = new Vector2d(0,0);
 
   for(i=0; i<edgeCountA+edgeCountB; i++){
 		if(i<edgeCountA){
-			edge = complex1.edges[i];
+			edge = convex1.edges[i];
       //console.log(edge);
 		}
 		else{
-			edge = complex2.edges[i-edgeCountA];
+			edge = convex2.edges[i-edgeCountA];
       //console.log(edge);
 		}
 
-		let axis = new Vector(-edge.y, edge.x);
+		let axis = new Vector2d(-edge.y, edge.x);
     //console.log(axis);
     axis.Normalize();
     //console.log(axis);
-    let minmaxA = new Vector(0,0);
-    let minmaxB = new Vector(0,0);
-		minmaxA = ProjectComplex(axis, complex1);
-		minmaxB = ProjectComplex(axis, complex2);
+    let minmaxA = new Vector2d(0,0);
+    let minmaxB = new Vector2d(0,0);
+		minmaxA = ProjectSAT(axis, convex1);
+		minmaxB = ProjectSAT(axis, convex2);
     //console.log(minmaxA.x);
 
 		if(IntervalDistance(minmaxA.x,minmaxA.y,minmaxB.x,minmaxB.y)>0){
@@ -185,31 +184,62 @@ function ComplexCollision(complex1,complex2,velocity=new Vector(0,0)){
       minIntervalDistance = intervalDistance;
       translationAxis = axis;
 
-      let d = new Vector(complex1.pos-complex2.pos);
+      let d = new Vector2d(convex1.pos-convex2.pos);
       if(d.DotProduct(translationAxis)<0) {translationAxis = -translationAxis;}
     }
 	}
-  if(collisionReturn.willCollide) collisionReturn.overlapVector = VectorMultFloat(translationAxis,minIntervalDistance);
-	return collisionReturn;
+  if(collisionReturn.willCollide){collisionReturn.overlapVector2d = Vector2dMultFloat(translationAxis,minIntervalDistance)};
+  if(collisionReturn.collides && useMathLine){
+    collisionReturn.collides = MathLineCollision(convex1, convex2,velocity,collisionReturn).collides;
+    collisionReturn.willCollide = MathLineCollision(convex1, convex2,velocity,collisionReturn).collides;
+  }
+  return collisionReturn;
 }
 
-//turns box into complex for complex on complex collision
-function BoxComplexCollision(box,complex1,velocity = new Vector(0,0)){
-	let pointArray = [new Vector(box.x, box.y),new Vector(box.x+box.w,box.y),new Vector(box.x+box.w, box.y+box.h),new Vector(box.x,box.y+box.h)];
-	let complex2 = new Complex(new Vector(box.x+box.w/2,box.y+box.h/2), pointArray, true);
-  return ComplexCollision(complex1, complex2,velocity);
+//turns box into convex for convex on convex collision
+function BoxSATCollision(box,convex1,velocity = new Vector2d(0,0)){
+	let pointArray = [new Vector2d(box.x, box.y),new Vector2d(box.x+box.w,box.y),new Vector2d(box.x+box.w, box.y+box.h),new Vector2d(box.x,box.y+box.h)];
+	let convex2 = new Convex(new Vector2d(box.x+box.w/2,box.y+box.h/2), pointArray, true);
+  return SATCollision(convex1, convex2,velocity,false);
 }
 
-//turns circle into simplified complex by sampling points every angleToSample, for complex on complex collision
-function CircleComplexCollision(circle,complex1,velocity = new Vector(0,0)){
+//turns circle into simplified convex by sampling points every angleToSample, for convex on convex collision
+function CircleSATCollision(circle,convex1,velocity = new Vector2d(0,0),useMathLine){
 	let angleToSample = 45; //angle interval at which the code samples. Should be 10, 20, 30, 45 or 60.
 	let pointArray = [];
 	for(i=0; i<Math.round(360/angleToSample); i++){
-		let point = new Vector(circle.r*Math.sin(Math.PI*2*angle/360),circle.r*Math.cos(Math.PI*2*angle/360));
+		let point = new Vector2d(circle.r*Math.sin(Math.PI*2*angle/360),circle.r*Math.cos(Math.PI*2*angle/360));
 		pointArray.push(point);
 	}
-	let complex2 = new Complex(new Vector(cirlce.x, circle.y), pointArray, true);
-	return ComplexCollision(complex1,complex2,velocity);
+	let convex2 = new Convex(new Vector2d(cirlce.x, circle.y), pointArray, true);
+  return SATCollision(convex1,convex2,velocity,useMathLine);
+}
+
+function MathLineCollision(convex1, convex2,velocity,collisionReturn) {
+  let intersectReturn = collisionReturn;
+  intersectReturn.collides=false;
+  let pointCountA = convex1.points.length;
+	let pointCountB = convex2.points.length;
+  let mathLine = new MathLine(1,1,new Vector2d(0,0),new Vector2d(0,0));
+  let mathLine2 = new MathLine(1,1,new Vector2d(0,0),new Vector2d(0,0));
+  for(let i=0; i<pointCountA; i++){
+    let j = i+1;
+    if(j>=pointCountA){j=0;}
+    mathLine.ReEvaluate(convex1.points[i], convex1.points[j]);
+    for(let k=0; k<pointCountB; k++){
+      let l = k+1;
+      if(l>=pointCountA){l=0;}
+      mathLine2.ReEvaluate(convex2.points[k], convex2.points[l]);
+      let intersect = CalcIntercept(mathLine.a, mathLine2.a, mathLine.b, mathLine2.b);
+      let withinBounds = IntersectionWithinBounds(intersect.atPoint, convex1.points[i], convex1.points[j]);
+      let withinBounds2 = IntersectionWithinBounds(intersect.atPoint, convex2.points[k], convex2.points[l]);
+      if(intersect.intersects && withinBounds && withinBounds2){
+        intersectReturn.collides=true;
+        break;
+      }
+    }
+  }
+  return intersectReturn;
 }
 
 function IntervalDistance(minA,maxA,minB,maxB){
@@ -221,11 +251,11 @@ function IntervalDistance(minA,maxA,minB,maxB){
 	}
 }
 
-function ProjectComplex(axis, complex){
-	let d = axis.DotProduct(complex.points[0]);
+function ProjectSAT(axis, convex){
+	let d = axis.DotProduct(convex.points[0]);
 	let min = d;
 	let max = d;
-  complex.points.forEach((point, index) => {
+  convex.points.forEach((point, index) => {
     d = point.DotProduct(axis);
     if(d<min){
 			min = d;
@@ -234,5 +264,5 @@ function ProjectComplex(axis, complex){
 			max = d;
 		}
   });
-  return new Vector(min, max);
+  return new Vector2d(min, max);
 }

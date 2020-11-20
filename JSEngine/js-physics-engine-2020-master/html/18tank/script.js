@@ -14,8 +14,8 @@ let img = new Image();
 img.src = "tanksheet.png";
 let spriteRenderer;
 let tank, tank2;
-let position = new Vector(width/2, height/2);
-let position2 = new Vector(width/2+100, height/2);
+let position = new Vector2d(width/2, height/2);
+let position2 = new Vector2d(width/2+100, height/2);
 let tankHeight = 37;
 let tankWidth = 32;
 let drawCollision = true;
@@ -23,9 +23,9 @@ let collision, collision2;
 
 img.addEventListener('load',()=>{
   spriteRenderer = new SpriteSheetRenderer(img, 8, 4, 32);
-  tank = new Player(0,8,position,position,controlGroup,1,8);
+  tank = new Player(0.001,8,position,position,controlGroup,1,8);
   tank.SetupCollision(tankHeight,tankWidth);
-  tank2 = new Player(0,16,position2,position2,controlGroup2,9,16);
+  tank2 = new Player(0.001,16,position2,position2,controlGroup2,9,16);
   tank2.SetupCollision(tankHeight,tankWidth);
   createWalls();
   setInterval(animate, 1);
@@ -48,13 +48,13 @@ function createWalls() {
         wall.y = y;
         wall.w = width;
         wall.h = height;
-        wall.collision = new Box(new Vector(x, y),new Vector(width,height));
+        wall.collision = new Box(new Vector2d(x, y),new Vector2d(width,height));
         walls.push(wall);
     }
 }
 
 class Player{
-  constructor(angle,animationCount,pos,prevPos,inputGroup, min, max, collision=new Box(new Vector(0,0),new Vector(width,height),-1), direction = "forward")
+  constructor(angle,animationCount,pos,prevPos,inputGroup, min, max, collision=new Box(new Vector2d(0,0),new Vector2d(width,height),-1), direction = "forward")
   {
     this.id = 1;
     this.r = 50;
@@ -72,18 +72,19 @@ class Player{
   }
 
   SetupCollision(thisHeight,thisWidth) {
-    this.collision = new Complex(this.pos,[new Vector(this.x-thisWidth, this.y-thisHeight),new Vector(this.x+thisWidth, this.y-thisHeight),new Vector(this.x+thisWidth, this.y+thisHeight),new Vector(this.x-thisWidth, this.y+thisHeight)],true);
+    this.collision = new Convex(this.pos,[new Vector2d(this.x-thisWidth, this.y-thisHeight),new Vector2d(this.x+thisWidth, this.y-thisHeight),new Vector2d(this.x+thisWidth, this.y+thisHeight),new Vector2d(this.x-thisWidth, this.y+thisHeight)],true);
+    this.collision.Rotate(57.25*this.angle,this.pos);
   }
 
   Draw(delta) {
     if(drawCollision){this.collision.Draw(context);}
     let animation = Math.floor(this.animationCount);
-    console.log(delta);
+    //console.log(delta);
     //console.log(this.pos.DistanceTo(this.prevPos));
     if (delta.Length() > 0.001) {
         if (this.direction == "forward") {
             animation = Math.floor(this.animationCount -= 0.05);
-            console.log(this.animationCount);
+            //console.log(this.animationCount);
         } else {
             animation = Math.floor(this.animationCount += 0.05);
         }
@@ -110,15 +111,15 @@ class Player{
     //console.log(this.pos);
     this.prevPos.x = this.pos.x;
     this.prevPos.y = this.pos.y;
-    let delta = new Vector(0,0);
+    let delta = new Vector2d(0,0);
     if (this.inputGroup[0]) {
-        delta = new Vector(0.5 * Math.sin(this.angle),-0.5 * Math.cos(this.angle))
+        delta = new Vector2d(0.5 * Math.sin(this.angle),-0.5 * Math.cos(this.angle))
         this.collision.Move(delta);
         this.pos.y -= 0.5 * Math.cos(this.angle);
         this.pos.x += 0.5 * Math.sin(this.angle);
         this.direction = "forward";
     } else if (this.inputGroup[2]) {
-        delta = new Vector(-0.5 * Math.sin(this.angle),0.5 * Math.cos(this.angle))
+        delta = new Vector2d(-0.5 * Math.sin(this.angle),0.5 * Math.cos(this.angle))
         this.collision.Move(delta);
         this.pos.y += 0.5 * Math.cos(this.angle);
         this.pos.x -= 0.5 * Math.sin(this.angle);
@@ -130,14 +131,14 @@ class Player{
       if (collision.collides){
         let rightOf = selfRef.pos.x > wall.x;
         let aboveOf = selfRef.pos.y < wall.y;
-        let overlap = collision.overlapVector;
+        let overlap = collision.overlapVector2d;
         if(rightOf){
           overlap.x = -overlap.x;
         }
         if(aboveOf){
           overlap.y = -overlap.y;
         }
-        //console.log(collision.overlapVector);
+        //console.log(collision.overlapVector2d);
         this.collision.Move(overlap);
         selfRef.pos.x += overlap.x;
         selfRef.pos.y += overlap.y;
@@ -158,18 +159,14 @@ class Player{
 }
 
 function CollisionBetweenPlayers(player1, delta1, player2, delta2){
-  //console.log(delta1);
-  //console.log(delta2);
-  let collision1 = CheckCollision(player1.collision,player2.collision, delta1);
-  let collision2 = CheckCollision(player2.collision,player1.collision, delta2);
-  //console.log(collision1.overlapVector);
-  //console.log(collision2.overlapVector);
+  let collision1 = CheckCollision(player1.collision,player2.collision, delta1,true);
+  let collision2 = CheckCollision(player2.collision,player1.collision, delta2,true);
   let rightOf = player1.pos.x > player2.pos.x;
   let aboveOf = player1.pos.y < player2.pos.y;
   if(collision1.willCollide&&collision2.willCollide){
-    if(collision1.overlapVector.Length()>=collision2.overlapVector.Length()){
-      collision1.overlapVector.ClampLength(2.5);
-      let overlap = collision1.overlapVector;
+    if(collision1.overlapVector2d.Length()>=collision2.overlapVector2d.Length()){
+      collision1.overlapVector2d.ClampLength(2.5);
+      let overlap = collision1.overlapVector2d;
       if(rightOf){
         overlap.x = -overlap.x;
       }
@@ -180,8 +177,8 @@ function CollisionBetweenPlayers(player1, delta1, player2, delta2){
       player1.pos.x += overlap.x;
       player1.pos.y += overlap.y;
     } else {
-      collision2.overlapVector.ClampLength(2.5);
-      let overlap = collision2.overlapVector;
+      collision2.overlapVector2d.ClampLength(2.5);
+      let overlap = collision2.overlapVector2d;
       if(!rightOf){
         overlap.x = -overlap.x;
       }

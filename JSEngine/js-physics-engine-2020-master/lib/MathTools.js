@@ -32,22 +32,34 @@ function Evaluate(x = this.x, formula = this.formula){
   return result;
 }
 function GetDistance(pos1, pos2){
-  let result = Math.sqrt((pos2.dy - pos1.dy)*(pos2.dy - pos1.dy) + (pos2.dx - pos1.dx)*(pos2.dx - pos1.dx));
+  let result = Math.sqrt((pos2.y - pos1.y)*(pos2.y - pos1.y) + (pos2.x - pos1.x)*(pos2.x - pos1.x));
   return result;
 }
 function GetSlope(pos1, pos2){
-  let result = (pos2.dy - pos1.dy)/(pos2.dx - pos1.dx);
+  let result = (pos2.y - pos1.y)/(pos2.x - pos1.x);
   return result;
 }
 function CalcIntercept(a1, a2, b1, b2){
-  let x = 0;
-  let y = 0;
-  let bool = InterceptReturnBoolean(a1, a2, b1, b2);
-  if(bool){
-    x = InterceptReturnX(a1, a2, b1, b2);
-    y = InterceptReturnY(x, a1, b1);
+  let intersectionResult = new LineIntersectionResult(false, new Vector2d(0,0));
+  intersectionResult.intersects = InterceptReturnBoolean(a1, a2, b1, b2);
+  if(intersectionResult.intersects){
+    intersectionResult.atPoint.x = InterceptReturnX(a1, a2, b1, b2);
+    intersectionResult.atPoint.y = InterceptReturnY(intersectionResult.atPoint.x, a1, b1);
   }
-  return[bool, x, y];
+  return intersectionResult;
+}
+function IntersectionWithinBounds(intersectionPoint, bound1, bound2) {
+  let intersectX = intersectionPoint.x < Math.max(bound1.x, bound2.x) && intersectionPoint.x > Math.min(bound1.x, bound2.x);
+  if(Math.abs(bound1.x-bound2.x)<10){intersectX = true;}
+  let intersectY = intersectionPoint.y < Math.max(bound1.y, bound2.y) && intersectionPoint.y > Math.min(bound1.y, bound2.y);
+  if(Math.abs(bound1.y-bound2.y)<10){intersectY = true;}
+  if(intersectX && intersectY)
+  {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 function InterceptReturnBoolean(a1, a2, b1, b2){
   if(a1 == a2) return false;
