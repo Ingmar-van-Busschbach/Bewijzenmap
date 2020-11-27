@@ -19,8 +19,8 @@ class IntersectionPoint {
 
   ReEvaluate(a1, a2, b1, b2) {
     let result = CalcIntercept(a1, a2, b1, b2);
-    if(result[0]){
-    this.pos = new Vector2d(result[1], result[2]);
+    if(result.intersects){
+    this.pos = result.atPoint;
   }}
   testCollision(x1, x2, y1, y2) {
     if (this.pos.dx + this.radius > x1 && this.pos.dx - this.radius < x2 && this.pos.dy + this.radius > y1 && this.pos.dy - this.radius < y2) return true;
@@ -29,6 +29,6 @@ class IntersectionPoint {
 
 function GenerateInterceptionPoint(a1, a2, b1, b2, array = interceptionPoints, radius = 5, color = "#ffffff"){
   let result = CalcIntercept(a1, a2, b1, b2);
-  if(result.intersects == true){ array.push(new IntersectionPoint(new Vector2d(intersectionResult.atPoint.x, intersectionResult.atPoint.y), radius, color));
+  if(result.intersects == true){ array.push(new IntersectionPoint(result.atPoint, radius, color));
   }
 }
