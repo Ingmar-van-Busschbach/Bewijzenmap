@@ -22,30 +22,78 @@ class LineIntersectionResult {
 }
 
 class AngleCircle {
-  constructor(pos, radius, angle1, angle2, color = "#ffffff") {
+  constructor(pos, radius, angle1, angle2, orientation = 0, color = "#ffffff") {
     this.pos = pos;
     this.radius = radius;
     this.angle1 = angle1;
     this.angle2 = angle2;
     this.color = color;
+    this.orientation = orientation;
   }
-  ReEvaluate(pos, line1, line2) {
+  ReEvaluate(pos, line1, line2, radius = -1, orientation = -1) {
     this.pos = pos;
     this.angle1 = Math.atan(Math.min(line1.a, line2.a));
     this.angle2 = Math.atan(Math.max(line1.a, line2.a));
+    if(orientation != -1){
+      this.orientation = orientation;
+    }
+    if(radius != -1){
+      this.radius = radius;
+    }
   }
   draw(context) {
+    let invert = false;
     let res1 = this.angle1;
     let res2 = this.angle2;
-    if(this.angle1<0 && this.angle2<0){
-    let res3 = Math.abs(this.angle1);
-    let res4 = Math.abs(this.angle2);
-    res1 = Math.min(res1,res2);
-    res2 = Math.max(res1,res2);
+    if(this.angle1<=0 && this.angle2<=0 && this.orientation < 4){
+      //invert = !invert;
+      let res3 = Math.abs(this.angle1);
+      let res4 = Math.abs(this.angle2);
+      res1 = res3;
+      res2 = res4;
+      res1 = Math.PI*2-res1;
+      res2 = Math.PI*2-res2;
+    }
+    if(this.angle1>0 && this.angle2>0 && this.orientation < 4){
+      invert = !invert;
+      res1 = Math.PI+res1;
+    }
+    if(this.angle1<0 && this.angle2<0 && this.orientation > 3){
+      let res3 = Math.abs(this.angle1);
+      let res4 = Math.abs(this.angle2);
+      res1 = res3;
+      res2 = res4;
+      res1 = Math.PI-res1;
+      res2 = Math.PI*2-(Math.PI+res2);
+    }
+    if(this.angle1>=0 && this.angle2>=0 && this.orientation > 3){
+    }
+    switch(this.orientation){
+      case 0:
+        break;
+      case 1:
+        res1 = Math.PI+res1;
+        res2 = Math.PI+res2;
+        break;
+      case 2:
+        res1 = Math.PI+res1;
+        invert = !invert;
+        break;
+      case 3:
+        res2 = Math.PI+res2;
+        invert = !invert;
+        break;
+      case 4:
+        break;
+      case 5:
+        //invert = !invert;
+        res1 = Math.PI+res1;
+        res2 = Math.PI+res2;
+        break;
     }
     context.beginPath();
     context.fillStyle = this.color;
-    context.arc(this.pos.x, this.pos.y, this.radius, res1, res2, this.angle1<0 && this.angle2<0);
+    context.arc(this.pos.x, this.pos.y, this.radius, res1, res2, invert);
     context.fill();
     context.closePath();
   }
@@ -102,10 +150,10 @@ class MathLine {
   }
 }
 
-function GenerateAngleCircle(point, line1, line2, radius = 10, color = "#ffffff") {
+function GenerateAngleCircle(point, line1, line2, radius = 10, orientation = 0, color = "#ffffff") {
   let angle1 = Math.atan(Math.min(line1.a, line2.a));
   let angle2 = Math.atan(Math.max(line1.a, line2.a));
-  angleCircles.push(new AngleCircle(point.pos, radius, angle1, angle2, color))
+  angleCircles.push(new AngleCircle(point.pos, radius, angle1, angle2, orientation, color))
 }
 
 function GenerateMathLineFromPoints(pos1, pos2, color = "#ffffff") {

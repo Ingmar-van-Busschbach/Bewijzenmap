@@ -27,6 +27,11 @@ class Vector2d{
 	dot(vector){
 		return (this.dx * vector.dx + this.dy * vector.dy);
 	}
+	normalize(){
+		let ratio = 1/Math.sqrt(this.dx*this.dx + this.dy*this.dy);
+		this.dx *= ratio;
+		this.dy *= ratio;
+	}
 
 	get magnitude(){
 		return Math.sqrt(this.dx*this.dx + this.dy*this.dy);
@@ -100,5 +105,3 @@ class Vector2d{
 		this.dy = (a.dy + b.dy) / 2;
 	}
 }
-
-

@@ -16,6 +16,12 @@ class Vector2d
 		this.y = this.y / length;
 	}
 
+	FastNormalize(margin = 1){
+		let ratio = Q_rsqrt(this.x*this.x+this.y*this.y, margin);
+		this.x = this.x * ratio;
+		this.y = this.y * ratio;
+	}
+
 	ClampLength(maxLength) {
 		let length = this.Length();
 		let ratio = length / maxLength;

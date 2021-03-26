@@ -25,6 +25,10 @@ function sinusWave(index) {
   return ((2* Math.sin(index / 50)) + (2* Math.cos(index / 50))) / 50;
 }
 
+function Quad(x){
+  return x*x;
+}
+
 function Evaluate(x = this.x, formula = this.formula){
   let search = 'x';
   let formula2 = formula.toString();
@@ -75,7 +79,40 @@ function InterceptReturnY(x, a, b){
   let y = a*x+b;
   return y;
 }
+function Q_rsqrt(number, margin = 1)
+{
+    var i;
+    var x2, y;
+    const threehalfs = 1.5;
 
+    x2 = number * 0.5;
+    y = number;
+    //evil floating bit level hacking
+    var buf = new ArrayBuffer(4);
+    (new Float32Array(buf))[0] = number;
+    i =  (new Uint32Array(buf))[0];
+    i = (0x5f3759df - (i >> 1)); //What the fuck?
+    (new Uint32Array(buf))[0] = i;
+    y = (new Float32Array(buf))[0];
+    for(i=0; i<margin; i++){
+      y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+    }
+
+    return y;
+}
+function IsBetween(x, leftbound, rightbound, include = true){
+  if(include){
+    if(x>=leftbound && x<=rightbound){
+      return true;
+    }
+  }
+  else{
+    if(x>leftbound && x<rightbound){
+      return true;
+    }
+  }
+  return false;
+}
 /* function cartesian() {
     var r = [], arg = arguments, max = arg.length-1;
     function helper(arr, i) {
